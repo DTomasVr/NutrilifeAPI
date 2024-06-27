@@ -21,6 +21,7 @@ com\nutrilife\fitnessservice\security\TokenProvider.class
 com\nutrilife\fitnessservice\service\IngredientService.class
 com\nutrilife\fitnessservice\controller\ScheduleController.class
 com\nutrilife\fitnessservice\service\UserService.class
+com\nutrilife\fitnessservice\config\SwaggerConfig.class
 com\nutrilife\fitnessservice\service\StorageService.class
 com\nutrilife\fitnessservice\model\dto\RecipeResponseDTO.class
 com\nutrilife\fitnessservice\model\dto\ScheduleResponseDTO.class
