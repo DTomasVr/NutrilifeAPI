@@ -1,13 +1,10 @@
 package com.nutrilife.fitnessservice.service;
 
-import com.nutrilife.fitnessservice.exception.IngredientNotFoundException;
 import com.nutrilife.fitnessservice.exception.RecipeNotFoundException;
 import com.nutrilife.fitnessservice.mapper.RecipeMapper;
 import com.nutrilife.fitnessservice.model.dto.RecipeRequestDTO;
 import com.nutrilife.fitnessservice.model.dto.RecipeResponseDTO;
-import com.nutrilife.fitnessservice.model.entity.Ingredient;
 import com.nutrilife.fitnessservice.model.entity.Recipe;
-import com.nutrilife.fitnessservice.repository.IngredientRepository;
 import com.nutrilife.fitnessservice.repository.RecipeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,13 +19,10 @@ public class RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
-    private final IngredientRepository ingredientRepository;
 
     @Transactional
     public RecipeResponseDTO createRecipe(RecipeRequestDTO recipeRequestDTO) {
         Recipe recipe = recipeMapper.convertToEntity(recipeRequestDTO);
-        List<Ingredient> ingredients = ingredientRepository.findAllById(recipeRequestDTO.getIngredientIds());
-        recipe.setIngredients(ingredients);
         recipeRepository.save(recipe);
         return recipeMapper.convertToDTO(recipe);
     }
@@ -76,14 +70,8 @@ public class RecipeService {
         if (recipeRequestDTO.getImage() != null) {
             recipe.setImage(recipeRequestDTO.getImage());
         }
-        if (recipeRequestDTO.getIngredientIds() != null) {
-            // Convertir lista de IDs de ingredientes a lista de objetos Ingredient
-            List<Ingredient> ingredients = recipeRequestDTO.getIngredientIds().stream()
-                    .map(ingredientId -> ingredientRepository.findById(ingredientId)
-                            .orElseThrow(() -> new IngredientNotFoundException(
-                                    "Ingredient not found with id: " + ingredientId)))
-                    .collect(Collectors.toList());
-            recipe.setIngredients(ingredients);
+        if (recipeRequestDTO.getIngredients() != null) {
+            recipe.setIngredients(recipeRequestDTO.getIngredients());
         }
         if (recipeRequestDTO.getScore() >= 0 && recipeRequestDTO.getScore() <= 5) {
             recipe.setScore(recipeRequestDTO.getScore());
@@ -108,9 +96,6 @@ public class RecipeService {
     @Transactional(readOnly = true)
     public List<RecipeResponseDTO> getRecipesByCaloriesRange(float minCalories, float maxCalories) {
         List<Recipe> recipes = recipeRepository.findByTotalCaloriesBetween(minCalories, maxCalories);
-        if (recipes.isEmpty()) {
-            throw new RecipeNotFoundException("No recipes found within the specified calorie range");
-        }
         return recipes.stream()
                 .map(recipeMapper::convertToDTO)
                 .collect(Collectors.toList());
@@ -128,45 +113,6 @@ public class RecipeService {
         return recipes.stream()
                 .map(recipeMapper::convertToDTO)
                 .collect(Collectors.toList());
-    }
-
-    public List<Recipe> getRecipesByIngredients(List<Long> ingredientIds) {
-        return recipeRepository.findByIngredients_IdIn(ingredientIds);
-    }
-
-    public List<RecipeResponseDTO> getPopularRecipesByIngredients(List<Long> ingredientIds) {
-        List<Recipe> popularRecipes = recipeRepository.findPopularRecipesByIngredients(ingredientIds);
-        List<Recipe> filteredRecipes = popularRecipes.stream()
-                .filter(recipe -> recipe.getScore() >= 3.5f)
-                .collect(Collectors.toList());
-        return recipeMapper.convertToListDTO(filteredRecipes);
-    }
-
-    @Transactional(readOnly = true)
-    public List<RecipeResponseDTO> getRecipesByTypeAndNutritionalGoal(String type, String nutritionalGoal) {
-        List<Recipe> recipes = recipeRepository.findByTypeAndNutritionalGoal(type, nutritionalGoal);
-        return recipes.stream()
-                .map(recipeMapper::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<RecipeResponseDTO> getRecipesByNutritionalGoalAndIngredients(String nutritionalGoal,
-            List<Long> ingredientIds) {
-        List<Recipe> recipes = recipeRepository.findByNutritionalGoalAndIngredients(nutritionalGoal, ingredientIds);
-        return recipes.stream()
-                .map(recipeMapper::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<RecipeResponseDTO> convertToDTOListFromRecipe(List<Recipe> recipes) {
-        return recipes.stream()
-                .map(recipeMapper::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<RecipeResponseDTO> convertToDTOListFromRecipeResponse(List<RecipeResponseDTO> recipes) {
-        return recipes;
     }
 
 }

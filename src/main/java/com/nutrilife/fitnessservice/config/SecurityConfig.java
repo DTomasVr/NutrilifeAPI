@@ -17,19 +17,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/specialists/signup-spec", "/auth/token", "/customers/signup-cust")
-                        .permitAll() // Permitir sin autenticación
+                        .requestMatchers("/specialists/singup-spec", "/auth/token","/customers/singup-cust").permitAll() // Permitir sin autenticación
                         // Incluir rutas adicionales
-                        .requestMatchers("/ApiRest/v1/swagger-ui/**", "/v1/api-docs/**", "/swagger-ui.html",
-                                "/swagger-ui/**", "/webjars/**")
-                        .permitAll()
+                        .requestMatchers("/ApiRest/v1/swagger-ui/**", "/v1/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**").permitAll()
                         .anyRequest()
                         .authenticated() // Cualquier otra solicitud requiere autenticación
 

@@ -119,6 +119,7 @@ public class TrainingServiceTest {
 
         when(trainingRepository.findById(id)).thenReturn(Optional.of(training));
         doNothing().when(trainingMapper).updateEntityFromDTO(updateDTO, training);
+        when(trainingRepository.save(training)).thenReturn(training);
         when(trainingMapper.convertToDTO(training)).thenReturn(new TrainingResponseDTO());
 
         // Act

@@ -2,7 +2,6 @@ package com.nutrilife.fitnessservice.controller;
 
 import com.nutrilife.fitnessservice.model.dto.RecipeRequestDTO;
 import com.nutrilife.fitnessservice.model.dto.RecipeResponseDTO;
-import com.nutrilife.fitnessservice.model.entity.Recipe;
 import com.nutrilife.fitnessservice.service.RecipeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -73,37 +72,6 @@ public class RecipeController {
     @GetMapping("/by-type/{type}")
     public ResponseEntity<List<RecipeResponseDTO>> getRecipesByType(@PathVariable String type) {
         List<RecipeResponseDTO> recipes = recipeService.getRecipesByType(type);
-        return ResponseEntity.ok(recipes);
-    }
-
-    @GetMapping("/byIngredients")
-    public ResponseEntity<List<RecipeResponseDTO>> getRecipesByIngredients(@RequestParam List<Long> ingredientIds) {
-        List<Recipe> recipes = recipeService.getRecipesByIngredients(ingredientIds);
-        List<RecipeResponseDTO> recipeDTOs = recipeService.convertToDTOListFromRecipe(recipes);
-        return new ResponseEntity<>(recipeDTOs, HttpStatus.OK);
-    }
-
-    @GetMapping("/popular/byIngredients")
-    public ResponseEntity<List<RecipeResponseDTO>> getPopularRecipesByIngredients(
-            @RequestParam List<Long> ingredientIds) {
-        List<RecipeResponseDTO> popularRecipes = recipeService.getPopularRecipesByIngredients(ingredientIds);
-        return new ResponseEntity<>(popularRecipes, HttpStatus.OK);
-    }
-
-    @GetMapping("/byTypeAndNutritionalGoal")
-    public ResponseEntity<List<RecipeResponseDTO>> getRecipesByTypeAndNutritionalGoal(
-            @RequestParam String type,
-            @RequestParam String nutritionalGoal) {
-        List<RecipeResponseDTO> recipes = recipeService.getRecipesByTypeAndNutritionalGoal(type, nutritionalGoal);
-        return ResponseEntity.ok(recipes);
-    }
-
-    @GetMapping("/byNutritionalGoalAndIngredients")
-    public ResponseEntity<List<RecipeResponseDTO>> getRecipesByNutritionalGoalAndIngredients(
-            @RequestParam String nutritionalGoal,
-            @RequestParam List<Long> ingredientIds) {
-        List<RecipeResponseDTO> recipes = recipeService.getRecipesByNutritionalGoalAndIngredients(nutritionalGoal,
-                ingredientIds);
         return ResponseEntity.ok(recipes);
     }
 }

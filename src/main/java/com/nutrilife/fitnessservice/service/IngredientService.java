@@ -5,10 +5,7 @@ import com.nutrilife.fitnessservice.mapper.IngredientMapper;
 import com.nutrilife.fitnessservice.model.dto.IngredientRequestDTO;
 import com.nutrilife.fitnessservice.model.dto.IngredientResponseDTO;
 import com.nutrilife.fitnessservice.model.entity.Ingredient;
-import com.nutrilife.fitnessservice.model.entity.Recipe;
 import com.nutrilife.fitnessservice.repository.IngredientRepository;
-import com.nutrilife.fitnessservice.repository.RecipeRepository;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +19,6 @@ public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
     private final IngredientMapper ingredientMapper;
-    private final RecipeRepository recipeRepository;
 
     @Transactional
     public IngredientResponseDTO createIngredient(IngredientRequestDTO ingredientRequestDTO) {
@@ -48,16 +44,6 @@ public class IngredientService {
 
     @Transactional
     public void deleteIngredient(Long id) {
-        // Obtener las recetas que contienen el ingrediente
-        List<Recipe> recipes = recipeRepository.findByIngredients_IdIn(List.of(id));
-
-        // Actualizar las recetas para quitar el ingrediente
-        for (Recipe recipe : recipes) {
-            recipe.getIngredients().removeIf(ingredient -> ingredient.getId().equals(id));
-            recipeRepository.save(recipe);
-        }
-
-        // Eliminar el ingrediente
         ingredientRepository.deleteById(id);
     }
 
@@ -76,15 +62,6 @@ public class IngredientService {
         ingredient = ingredientRepository.save(ingredient);
 
         return ingredientMapper.convertToDTO(ingredient);
-
-    }
-
-    @Transactional(readOnly = true)
-    public List<IngredientResponseDTO> findIngredientsByName(String name) {
-        List<Ingredient> ingredients = ingredientRepository.findByNameIgnoreCase(name);
-        return ingredients.stream()
-                .map(ingredientMapper::convertToDTO)
-                .collect(Collectors.toList());
     }
 
 }

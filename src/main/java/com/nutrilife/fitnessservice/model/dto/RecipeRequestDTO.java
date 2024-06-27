@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import com.nutrilife.fitnessservice.model.entity.Ingredient;
 
 @Data
 @AllArgsConstructor
@@ -38,7 +39,7 @@ public class RecipeRequestDTO {
     private String image;
 
     @NotEmpty(message = "Los ingredientes no pueden estar vacíos")
-    private List<Long> ingredientIds;
+    private List<Ingredient> ingredients;
 
     @NotNull(message = "El score no puede estar vacío")
     @Min(value = 0, message = "El score no puede ser un valor negativo")

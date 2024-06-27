@@ -23,11 +23,11 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/customers")
 @AllArgsConstructor
 public class CustomerProfileController {
-
+    
     private final CustomerProfileService customerProfileService;
-
+    
     @GetMapping
-    public ResponseEntity<List<CustomerProfileResponseDTO>> getAllProfiles() {
+    public ResponseEntity<List<CustomerProfileResponseDTO>> getAllProfiles(){
         List<CustomerProfileResponseDTO> customers = customerProfileService.getAllCustomerProfile();
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
@@ -56,16 +56,16 @@ public class CustomerProfileController {
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
-    @PostMapping("/signup-cust")
-    public ResponseEntity<CustomerProfileResponseDTO> createCutomerProfile(
-            @Validated @RequestBody CustomerProfileRequestDTO customerDTO) {
+    @PostMapping("singup-cust")
+    public ResponseEntity<CustomerProfileResponseDTO> createCutomerProfile(@Validated @RequestBody CustomerProfileRequestDTO customerDTO) {
         CustomerProfileResponseDTO customer = customerProfileService.createProfileCustomer(customerDTO);
         return new ResponseEntity<>(customer, HttpStatus.CREATED);
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomerProfileResponseDTO> deleteCustomerProfile(@PathVariable Long id) {
         customerProfileService.deleteCustomerProfile(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
     }
 }
