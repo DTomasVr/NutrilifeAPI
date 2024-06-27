@@ -1,0 +1,8 @@
+com\nutrilife\fitnessservice\Controller\TrainingControllerIntegrationTest.class
+com\nutrilife\fitnessservice\Controller\MeetingControllerTest.class
+com\nutrilife\fitnessservice\Service\WeeklyScheduleServiceTest.class
+com\nutrilife\fitnessservice\FitnessServiceApplicationTests.class
+com\nutrilife\fitnessservice\Service\TrainingServiceTest.class
+com\nutrilife\fitnessservice\Controller\ScheduleControllerTest.class
+com\nutrilife\fitnessservice\Service\ScheduleServiceTest.class
+com\nutrilife\fitnessservice\Service\MeetingServiceTest.class
